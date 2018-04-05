@@ -3,21 +3,23 @@
 
 ## Allowed HTTPs requests:
 
-__HEAD__    : Get resource without message-body response
-__OPTIONS__ : Get options/requirements for resource without server side action.
-__GET__     : Get resource
-__POST__    : Create resource
-__PUT__     : Update resource
-__DELETE__  : Delete resource
+- __HEAD__    : Get resource without message-body response
+- __OPTIONS__ : Get options/requirements for resource without server side action.
+- __GET__     : Get resource
+- __POST__    : Create resource
+- __PUT__     : Update resource
+- __DELETE__  : Delete resource
 
 
 ## Description Of Usual Server Responses:
+
 - 200 __OK__ - the request was successful (some API calls may return 201 instead).
 - 201 __Created__ - the request was successful and a resource was created.
 - 204 __No Content__ - the request was successful but there is no representation to return (i.e. the response is empty).
 - 400 __Bad Request__ - the request could not be understood or was missing required parameters.
 - 401 __Unauthorized__ - authentication failed or user doesn't have permissions for requested operation.
-- 403 __Forbidden__ - access denied.404 Not Found - resource was not found.
+- 403 __Forbidden__ - access denied.
+- 404 __Not Found__ - resource was not found.
 - 405 __Method Not Allowed__ - requested method is not supported for resource.
 
 
@@ -69,7 +71,7 @@ __DELETE__  : Delete resource
 
 ### DELETE /{nouns}/{id}
 
-* Deletes the user
+* Delete the record
 * Status codes - 204, 404
 
 
