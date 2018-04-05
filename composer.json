@@ -1,5 +1,5 @@
 {
-    "name": "gionniboy/api",
+    "name": "cineboard/api",
     "description": "Slim PHP API to handle personal movie library",
     "license": "BSD-3-Clause",
     "type": "project",
@@ -13,7 +13,7 @@
     }],
     "autoload": {
         "psr-4": {
-            "Cineboard\\": "app/src/"
+            "Cineboard\\": "src/"
         }
     },
     "autoload-dev": {

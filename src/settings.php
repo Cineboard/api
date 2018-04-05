@@ -11,9 +11,9 @@ return [
         'debug' => 'false',
         'frontend_url' => '__FRONTEND_URL__',
         'logger' => [
-            'name' => 'cineboard-api',
+            'name' => 'api',
             'path' => __DIR__ . '/../log/app.log',
-            'level' => \Monolog\Logger::DEBUG,
+            'level' => \Monolog\Logger::INFO,
         ],
         'displayErrorDetails' => 'false',
         'database' => [

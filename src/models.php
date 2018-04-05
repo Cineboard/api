@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP version 7
- * Routes aggregator - load all routes inside Routes dir
+ * Model aggregator - load all models inside Model dir
  */
 
 $modelFiles = (array) glob(__DIR__ . '/../src/Model/*.php');
