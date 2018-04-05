@@ -1,15 +1,15 @@
 {
-    "name": "gionniboy/cineboard-api",
+    "name": "gionniboy/api",
     "description": "Slim PHP API to handle personal movie library",
     "license": "BSD-3-Clause",
     "type": "project",
     "keywords": [
-        "slim-framework", "cinema", "library", "dashboard", "api"
+        "slim-framework", "cineboard", "cinema", "library", "dashboard", "api"
     ],
     "authors": [{
         "name": "GB Pullarà",
         "email": "info@firegarden.co",
-        "homepage": "https://firegarden.co"
+        "homepage": "https://cineboard.firegarden.co"
     }],
     "autoload": {
         "psr-4": {
