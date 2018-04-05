@@ -1,0 +1,49 @@
+{
+    "name": "cineboard/api",
+    "description": "Slim PHP API to handle personal movie library",
+    "license": "BSD-3-Clause",
+    "type": "project",
+    "keywords": [
+        "slim-framework", "cineboard", "cinema", "library", "dashboard", "api"
+    ],
+    "authors": [{
+        "name": "GB Pullarà",
+        "email": "info@firegarden.co",
+        "homepage": "https://cineboard.firegarden.co"
+    }],
+    "autoload": {
+        "psr-4": {
+            "Cineboard\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cineboard\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.1",
+        "slim/slim": "^3.9",
+        "monolog/monolog": "^1.23",
+        "illuminate/database": "^5.6"
+    },
+    "scripts": {
+        "tests":[
+            "php vendor/bin/phpcs --standard=phpcs.xml app",
+            "php vendor/bin/phpmd app text phpmd.xml",
+            "php vendor/bin/phpmetrics --report-html=build/phpmetric-report app",
+            "php vendor/phpunit/phpunit/phpunit --coverage-html build/"
+        ],
+        "post-update-cmd": [
+            "echo 'FINISHED'"
+        ]
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.2",
+        "phpunit/phpunit": "^7.0",
+        "phpmd/phpmd": "^2.6",
+        "phpstan/phpstan": "^0.9.2",
+        "phpmetrics/phpmetrics": "^2.3",
+        "guzzlehttp/guzzle": "^6.3"
+    }
+}

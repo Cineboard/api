@@ -19,9 +19,11 @@ Edit db.config and db_create.sh to customize configuration and then launch db_cr
 
 `cd sql && bash db_create.sh`
 
+The copy src/settings.php to settings.local.php and customize.
+
 To quickly use the application launch this command on both repositories:
 
-`bash server-start-builtin.sh`
+`bash server-start-builtin.sh $PORT`
 
 and browser to localhost:8080 to load webgui.
 
@@ -32,20 +34,21 @@ Important! Before to proceed check if php-xdebug is installed and running on you
 
 `php -r "echo (extension_loaded('xdebug') ? 'xdebug up and running!' : 'xdebug is not loaded!');"`
 
+Check settings for debug => 'true'  and monolog level to Logger::INFO .
 
 #### Check with PHPCS
 
-`php vendor/bin/phpcs --standard=phpcs.xml app`
+`php vendor/bin/phpcs --standard=phpcs.xml src`
 
 
 #### Check with PHPMD
 
-`php vendor/bin/phpmd app text phpmd.xml`
+`php vendor/bin/phpmd src text phpmd.xml`
 
 
 #### Check with PHPMetrics
 
-`php vendor/bin/phpmetrics --report-html=build/phpmetric-report app`
+`php vendor/bin/phpmetrics --report-html=build/phpmetric-report src`
 
 
 #### Run php unittests

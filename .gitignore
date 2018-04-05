@@ -1,7 +1,8 @@
 # Don't save local env files
 *.local.php
 log/*.log
-build/
+build/*
+!build/.gitkeep
 
 # Created by https://www.gitignore.io/api/osx,linux,windows,composer,phpcodesniffer,visualstudiocode
 
