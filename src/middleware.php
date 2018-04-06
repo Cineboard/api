@@ -1,5 +1,7 @@
 <?php
 
+global $app;
+
 // inject OPTIONS on routes - needed by frontend
 $app->options('/{routes:.+}', function ($request, $response, $args) {
     unset($request);
