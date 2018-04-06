@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS `category` (
   `created_at` DATETIME DEFAULT NULL,
   `deleted_at` DATETIME DEFAULT NULL,
   `updated_at` DATETIME DEFAULT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`)
+  UNIQUE KEY `category_name_unique`(`name`))
 ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 CREATE INDEX ix_name ON category (name) ;
 
