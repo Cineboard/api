@@ -37,7 +37,7 @@ $app->post('/users', function (Request $request, Response $response, array $args
         ->debug('Route /users has been called with args ' . var_export($args, true));
 
     // name db varchar 30 - if not 404 to avoid useless db interrogation
-    if (strlen($name) > 30) {
+    if (mb_strlen($name, 'UTF-8') > 30) {
         $data = "name too long: max 30 chars";
         return $response->withJson($data, 401);
     }
@@ -46,7 +46,9 @@ $app->post('/users', function (Request $request, Response $response, array $args
     $user = User::where('name', $name)->first();
     // check instanceof instead of obj
     if ($user instanceof User && $user->name == $name) {
-        $app->getContainer()->get('logger')->info("ERROR: NAME ALREADY EXISTS EXISTENT /users" . var_export($name, true));
+        $app->getContainer()
+        ->get('logger')
+        ->info("ERROR: NAME ALREADY EXISTS EXISTENT /users" . var_export($name, true));
         $data = "name already exists";
         return $response->withJson($data, 401);
     }
@@ -54,7 +56,9 @@ $app->post('/users', function (Request $request, Response $response, array $args
     $user = new User();
     $user->name = $name;
     $user->save();
-    $this->logger->info("NEW USER CREATED " . var_export($user['name'], true));
+    $app->getContainer()
+        ->get('logger')
+        ->info("NEW USER CREATED " . var_export($user['name'], true));
 
     return $response->withJson($user, 200);
 });
@@ -63,7 +67,7 @@ $app->put('/users/{id:[0-9]+}', function (Request $request, Response $response, 
     $parsedBody = $request->getParsedBody();
     $name = $parsedBody['name'];
 
-    if (strlen($name) > 30) {
+    if (mb_strlen($name, 'UTF-8') > 30) {
         $data = "name too long: max 30 chars";
         return $response->withJson($data, 401);
     }
