@@ -40,3 +40,8 @@ $capsule->getContainer()->singleton(
     ExceptionHandler::class,
     DbConnExceptionHandler::class
 );
+
+// http-cache and etags
+$container['cache'] = function (Container $container) {
+    return new \Slim\HttpCache\CacheProvider();
+};

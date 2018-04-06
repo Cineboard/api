@@ -27,7 +27,8 @@ return [
             'prefix' => '',
         ],
         'security' => [
-            'cors_domain' => '__CORS_DOMAIN__'
+            'cors_domain' => '__CORS_DOMAIN__',
+            'cache' => '__CACHE_TIME__'
         ]
     ],
 ];
