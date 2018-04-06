@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * PHP version 7
  * Model aggregator - load all models inside Model dir

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Cineboard\Model\Library;
 use \Slim\Http\Request;
