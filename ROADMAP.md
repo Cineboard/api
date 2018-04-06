@@ -5,9 +5,9 @@
 - [x] Public Repos
 - [x] Git Mirror
 - [x] Design DB & API
-- [ ] Base Skeleton API
-- [ ] Base Skeleton GUI
-- [ ] Basic Tests
+- [x] Base Skeleton API
+- [x] Base Skeleton GUI
+- [x] Basic Tests
 - [ ] Continuous Integration
 - [ ] Continuous Deployment
 - [ ] RESTful API backend
