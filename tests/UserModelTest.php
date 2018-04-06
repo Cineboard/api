@@ -5,7 +5,7 @@ namespace Cineboard\Tests;
 use Cineboard\Model\User;
 
 /**
- * Class TestTest
+ * Class UserModelTest
  *
  * @package Cineboard\Tests
  */

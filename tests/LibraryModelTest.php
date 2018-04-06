@@ -5,7 +5,7 @@ namespace Cineboard\Tests;
 use Cineboard\Model\Library;
 
 /**
- * Class TestTest
+ * Class LibraryModelTest
  *
  * @package Cineboard\Tests
  */

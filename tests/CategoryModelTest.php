@@ -5,7 +5,7 @@ namespace Cineboard\Tests;
 use Cineboard\Model\Category;
 
 /**
- * Class CategoryTest
+ * Class CategoryModelTest
  *
  * @package Cineboard\Tests
  */

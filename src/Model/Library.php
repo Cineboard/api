@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Map db user to user model
+ * Map library to model
  * @package Cineboard\Model
  */
 class Library extends Model
