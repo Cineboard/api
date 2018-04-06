@@ -28,7 +28,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 session_start();
 
-// Instantiate the app
+// TODO: use env [12factor]
+// Instantiate the app - use local settings
 $settings = require __DIR__ . '/../src/settings.local.php';
 $app = new App($settings);
 
