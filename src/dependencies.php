@@ -15,10 +15,7 @@ global $app;
 // DIC configuration
 $container = $app->getContainer();
 
-// -----------------------------------------------------------------------------
-// Service providers
-// -----------------------------------------------------------------------------
-
+// Monolog Logger
 $container['logger'] = function (Container $container) {
     $settings = $container->get('settings');
     $logger = new Logger($settings['logger']['name']);
@@ -43,6 +40,3 @@ $capsule->getContainer()->singleton(
     ExceptionHandler::class,
     DbConnExceptionHandler::class
 );
-
-// initializate logger
-$logger = $app->getContainer()->logger;
