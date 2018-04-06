@@ -97,10 +97,12 @@ pages:
 #     - mkdir -p ~/.ssh
 #     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
 #     - scp -r src/ "$SSHUSER"@cineboard.firegarden.co:"$DESTPATH"
+#     - ssh "SSHUSER"@cineboard.firegarden.co bash setup_settings.sh
 #     - echo yay
 #   environment:
 #     name: demo
 #     url: https://api.cineboard.firegarden.co
+#   when: manual
 #   only:
 #   - master
 
