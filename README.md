@@ -8,7 +8,7 @@
 - RESTful API [slim php framework](https://github.com/slimphp/Slim)
 - WebGUI [AngularJS](https://github.com/angular/angular.js) and [Bootstrap](https://github.com/twbs/bootstrap)
 - RDBMS [MariaDB 10.2](https://github.com/MariaDB/server)
-  [if MySQL use a version superior to 5.7]
+  [If MySQL is used, use a version greater than 5.7 ]
 
 
 ### TO THE USERS
@@ -19,7 +19,7 @@ Edit db.config and db_create.sh to customize configuration and then launch db_cr
 
 `cd sql && bash db_create.sh`
 
-The copy src/settings.php to settings.local.php and customize.
+Then copy src/settings.php to settings.local.php and customize.
 
 To quickly use the application launch this command on both repositories:
 
