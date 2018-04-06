@@ -25,7 +25,8 @@
         "php": ">=7.1",
         "slim/slim": "^3.9",
         "monolog/monolog": "^1.23",
-        "illuminate/database": "^5.6"
+        "illuminate/database": "^5.6",
+        "slim/http-cache": "^0.4.0"
     },
     "scripts": {
         "tests":[
@@ -35,7 +36,10 @@
             "php vendor/phpunit/phpunit/phpunit --coverage-html build/"
         ],
         "post-update-cmd": [
-            "echo 'FINISHED'"
+            "echo 'UPDATE COMPLETE'",
+            "echo 'running tests'",
+            "composer run-script tests",
+            "composer show"
         ]
     },
     "require-dev": {
