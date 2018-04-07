@@ -1,3 +1,8 @@
+[![pipeline status](https://gitlab.com/cineboard/api/badges/master/pipeline.svg)](https://gitlab.com/cineboard/api/commits/master)
+
+[![coverage report](https://gitlab.com/cineboard/api/badges/master/coverage.svg)](https://gitlab.com/cineboard/api/commits/master)
+
+
 # Cineboard restful API
 
 ## Manage movie collections for you, family or friends.
@@ -34,6 +39,7 @@ Important! Before to proceed check if php-xdebug is installed and running on you
 
 `php -r "echo (extension_loaded('xdebug') ? 'xdebug up and running!' : 'xdebug is not loaded!');"`
 
+
 Check settings for debug => 'true'  and monolog level to Logger::INFO .
 
 #### Check with PHPCS
@@ -68,7 +74,7 @@ Check settings for debug => 'true'  and monolog level to Logger::INFO .
 
 #### Launch with docker compose
 
+```docker-compose up -d```
 
 
-
-have fun!
+have fun and find a lot of bugs!

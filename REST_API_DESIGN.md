@@ -56,6 +56,11 @@
 * Returns a single record
 * Status codes - 200, 404
 
+### GET /{nouns}/{id}/{nouns}
+
+* Return the whole collection of {id}
+* Status Codes - 200, 404
+
 ### POST /{nouns}
 
 * Creates a new record

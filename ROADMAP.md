@@ -2,13 +2,14 @@
 
 ### a little help to keep trace on feature/bug/whatever ...
 
-- [x] Public Repos
-- [x] Git Mirror
-- [x] Design DB & API
+- [x] Gitlab Public Repos
+- [x] Github Mirror
+- [x] Design DB
+- [x] Design API
 - [x] Base Skeleton API
 - [x] Base Skeleton GUI
 - [x] Basic Tests
-- [ ] Continuous Integration
+- [x] Continuous Integration
 - [ ] Continuous Deployment
 - [ ] RESTful API backend
 - [ ] Client-side frontend
@@ -17,3 +18,4 @@
 - [ ] Advanced Tests
 - [ ] SSL LetsEncrypt
 - [ ] Forum/Telegram group for discussions
+
