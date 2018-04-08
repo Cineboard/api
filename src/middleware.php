@@ -21,5 +21,10 @@ $app->add(function ($request, $response, $next) {
                 'Access-Control-Allow-Headers',
                 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
             )
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+            ->withHeader('Accept', 'application/cineboard+json; version=1');
 });
+
+// HttpCache
+$cacheTime = $app->getContainer()->get("settings")["security"]["cache"];
+$app->add(new \Slim\HttpCache\Cache('public', $cacheTime));
