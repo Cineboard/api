@@ -4,79 +4,113 @@ use Cineboard\Model\Category;
 use \Slim\Http\Request;
 use \Slim\Http\Response;
 
+/** @var \Slim\App $app */
 global $app;
 
-// read all records
-$app->get('/categories', function (Request $request, Response $response, $args) {
-    $data = Category::all();
-
-    // build response
-    $resp["status"] = "OK";
-    $resp["data"] = $data;
-
-    // Returning response
-    return $response->withJson($resp);
+$app->get('/categories', function (Request $request, Response $response, array $args) {
+    unset($request);
+    $categories = Category::all();
+    if (!$categories) {
+        $data = "categories not found";
+        return $response->withJson($data, 404);
+    }
+    return $response->withJson($categories, 200);
 });
 
-// return single record
-$app->get('/categories/{id}', function (Request $request, Response $response, $args) {
-    $data = Category::find($args["id"]);
-    // build response
-    if ($data) {
-        $resp["status"] = "OK";
-    } else {
-        $resp["status"] = "ERR";
+$app->get('/categories/{id:[0-9]+}', function (Request $request, Response $response, array $args) {
+    unset($request);
+    $category = Category::find($args["id"]);
+    if (!$category) {
+        $data = "category not found";
+        return $response->withJson($data, 404);
     }
-    $resp["data"] = $data;
-    // Returning response
-    return $response->withJson($resp);
+    return $response->withJson($category, 200);
 });
 
-// save/create data for a new record
-$app->post('/categories', function (Request $request, Response $response, $args) {
-    $name = $request->getParam("name");
-    $data = new Category();
-    $data->name = $name;
-    $data->save();
-    // build response
-    if ($data) {
-        $resp["status"] = "OK";
-    } else {
-        $resp["status"] = "ERR";
+$app->post('/categories', function (Request $request, Response $response, array $args) use ($app) {
+    $parsedBody = $request->getParsedBody();
+
+    // match number of db field
+    if (count($parsedBody) > 1) {
+        $data = "too much argumets";
+        return $response->withJson($data, 401);
     }
-    $resp["data"] = $data;
-    // Returning response
-    $response = $response->withJson($resp);
+
+    $name = $parsedBody['name'];
+    if (!isset($name)) {
+        $data = "name cannot be null";
+        return $response->withJson($data, 401);
+    }
+
+    // name db varchar 255 - if not 404 to avoid useless db interrogation
+    if (mb_strlen($name, 'UTF-8') > 255) {
+        $data = "name too long: max 255 chars";
+        return $response->withJson($data, 401);
+    }
+
+    // name is unique - check it
+    $category = Category::where('name', $name)->first();
+    // check instanceof instead of obj
+    if ($category instanceof Category && $category->name == $name) {
+        $data = "name already exists";
+        return $response->withJson($data, 401);
+    }
+    // create if not exists
+    $category = new Category();
+    $category->name = $name;
+    $category->save();
+    $app->getContainer()->get('logger')->info("NEW CATEGORY CREATED " . var_export($category['name'], true));
+
+    return $response->withJson($category, 200);
 });
 
-// save/update for existing record
-$app->put('/categories/{id}', function (Request $request, Response $response, $args) {
-    $name = $request->getParam("name");
-    $data = Category::find($args["id"]);
-    $data->name = $name;
-    $data->save();
-    // build response
-    if ($data) {
-        $resp["status"] = "OK";
-    } else {
-        $resp["status"] = "ERR";
+$app->put('/categories/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($app) {
+    $parsedBody = $request->getParsedBody();
+
+    // match number of db field
+    if (count($parsedBody) > 1) {
+        $data = "too much argumets";
+        return $response->withJson($data, 401);
     }
-    $resp["data"] = $data;
-    // Returning response
-    return $response->withJson($resp);
+
+    $name = $parsedBody['name'];
+
+    if (!isset($name)) {
+        $data = "name cannot be null";
+        return $response->withJson($data, 401);
+    }
+
+    // category name db varchar 255 - if not 404 to avoid useless db interrogation
+    if (mb_strlen($name, 'UTF-8') > 255) {
+        $data = "name too long: max 255 chars";
+        return $response->withJson($data, 401);
+    }
+
+    // name is unique - check it
+    $category = Category::find($args['id']);
+    // check instanceof instead of obj
+    if ($category instanceof Category && $category->name == $name) {
+        $data = "category name already exists";
+        return $response->withJson($data, 401);
+    }
+
+    $category->name = $name;
+    $category->save();
+    $app->getContainer()->get('logger')->info("CATEGORY EDITED " . var_export($category['name'], true));
+
+    return $response->withJson($category, 200);
 });
 
 // delete existing record
-$app->delete('/categories/{id}', function (Request $request, Response $response, $args) {
-    $data = Category::find($args["id"]);
-    $data->delete();
-    // build response
-    if ($data) {
-        $resp["status"] = "OK";
-    } else {
-        $resp["status"] = "ERR";
+$app->delete('/categories/{id:[0-9]+}', function (Request $request, Response $response, array $args) {
+    unset($request);
+
+    $category = Category::find($args["id"]);
+    if (!$category instanceof Category) {
+        $data = "category not found";
+        return $response->withJson($data, 404);
     }
-    $resp["data"] = $data;
-    // Returning response
-    return $response->withJson($resp);
+
+    $category->delete();
+    return $response->withJson($category, 200);
 });
