@@ -2,6 +2,7 @@
     "name": "cineboard/api",
     "description": "Slim PHP API to handle personal movie library",
     "license": "BSD-3-Clause",
+    "version": "0.3.0",
     "type": "project",
     "keywords": [
         "slim-framework", "cineboard", "cinema", "library", "dashboard", "api"

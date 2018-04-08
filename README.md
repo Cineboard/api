@@ -40,7 +40,7 @@ Important! Before to proceed check if php-xdebug is installed and running on you
 `php -r "echo (extension_loaded('xdebug') ? 'xdebug up and running!' : 'xdebug is not loaded!');"`
 
 
-Check settings for debug => 'true'  and monolog level to Logger::INFO .
+Check settings for debug => 'true'  and monolog level to Logger::DEBUG .
 
 #### Check with PHPCS
 
