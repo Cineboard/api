@@ -18,4 +18,12 @@ use Illuminate\Database\Eloquent\Collection;
 class User extends Model
 {
     protected $table = 'user';
+
+    public function libraries()
+    {
+        return $this->hasMany(
+            'Cineboard\Model\Library',
+            'user_id'
+        );
+    }
 }

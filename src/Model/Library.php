@@ -40,7 +40,7 @@ class Library extends Model
     public function categories()
     {
         return $this->belongsToMany(
-            "Cineboard\Model\LibraryCategory",
+            "Cineboard\Model\Category",
             "library_category"
         );
     }
