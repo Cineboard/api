@@ -9,10 +9,9 @@ return [
     ],
     'settings' => [
         'debug' => 'false',
-        'frontend_url' => '__FRONTEND_URL__',
         'logger' => [
             'name' => 'api',
-            'path' => __DIR__ . '/../log/app.log',
+            'path' => __DIR__ . '/../log/cineboard.log',
             'level' => \Monolog\Logger::INFO,
         ],
         'displayErrorDetails' => 'false',
