@@ -12,7 +12,7 @@ use Cineboard\Helper\DbConnExceptionHandler;
 
 global $app;
 
-// DIC configuration
+// Container Injection
 $container = $app->getContainer();
 
 // Monolog Logger
@@ -44,4 +44,42 @@ $capsule->getContainer()->singleton(
 // http-cache and etags
 $container['cache'] = function (Container $container) {
     return new \Slim\HttpCache\CacheProvider();
+};
+
+// Error Handler - needed by frontend
+$container['errorHandler'] = function (Container $container) {
+    return function ($request, $response, $exception) use ($container) {
+
+        $settings = $container->settings;
+
+        $errorCode = 500;
+        if (is_numeric($exception->getCode())
+        && $exception->getCode() > 300
+        && $exception->getCode() < 600) {
+            $errorCode = $exception->getCode();
+        }
+
+        if ($settings['debug'] == true) {
+            $data = [
+            'error_code' => $errorCode,
+            'error_message' => $exception->getMessage(),
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+            'trace' => explode("\n", $exception->getTraceAsString()),
+            ];
+        } else {
+            $data = [
+            'error_code' => $errorCode,
+            'error_message' => $exception->getMessage()
+            ];
+        }
+
+        $container->logger->error($errorCode
+            . " ON " . $exception->getFile()
+            .  ":" . $exception->getLine()
+            . " - " . $exception->getMessage());
+
+        return $response->withStatus(500)
+                        ->withJson(['error' => 'Aplication error', 'error_details' => $data]);
+    };
 };
