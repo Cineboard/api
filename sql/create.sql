@@ -1,24 +1,8 @@
--- mysql 5.7+ create db
-SET @DB_NAME='cineboard_db';
-SET @DB_USER='cineboard_user';
-SET @DB_PASSWORD='cineboard_password';
-
-SET @s = CONCAT('DROP DATABASE IF EXISTS ', @DB_NAME);
-PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
-
-SET @s = CONCAT('CREATE DATABASE ', @DB_NAME);
-PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
-
-SET @s = CONCAT('DROP USER IF EXISTS ', @DB_USER, '@localhost');
-PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
-
-SET @s = CONCAT('CREATE USER ', @DB_USER, '@localhost IDENTIFIED BY ''', @DB_PASSWORD,'''');
-PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
-
-SET @s = CONCAT('GRANT USAGE ON *.* TO ', @DB_USER, '@localhost');
-PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
-
-SET @s = CONCAT('GRANT ALL PRIVILEGES ON ', @DB_NAME, '.* TO ', @DB_USER,'@localhost');
-PREPARE stmt FROM @s; EXECUTE stmt; DEALLOCATE PREPARE stmt;
-
+-- if mysql <= 5.6
+DROP DATABASE IF EXISTS cineboard_db ;
+CREATE DATABASE cineboard_db ;
+GRANT USAGE ON *.* TO 'cineboard_user'@'localhost' ;
+DROP USER 'cineboard_user'@'localhost' ;
+CREATE USER 'cineboard_user'@'localhost' IDENTIFIED BY 'cineboard_password' ;
+GRANT ALL PRIVILEGES ON cineboard_db.* TO 'cineboard_user'@'localhost' ;
 FLUSH PRIVILEGES ;
