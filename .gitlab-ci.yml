@@ -99,7 +99,7 @@ deploy_demo:
     - echo yay
   environment:
     name: demo
-    url: https://api.cineboard.firegarden.co
+    url: https://dash.cineboard.firegarden.co
   # when: manual
   only:
   - master
