@@ -1,8 +1,8 @@
-[![pipeline status](https://gitlab.com/cineboard/api/badges/master/pipeline.svg)](https://gitlab.com/cineboard/api/commits/master)
+[![pipeline status](http://gitlab.com/cineboard/api/badges/master/pipeline.svg)](http://gitlab.com/cineboard/api/commits/master)
 
-[![coverage report](https://gitlab.com/cineboard/api/badges/master/coverage.svg)](https://gitlab.com/cineboard/api/commits/master)
+[![coverage report](https://gitlab.com/cineboard/api/badges/master/coverage.svg)](http://gitlab.com/cineboard/api/commits/master)
 
-![alt text](https://gitlab.com/cineboard/api/blob/master/Illustration/logo.png "Cineboard by AessE")
+![logo](logo.png "Cineboard by AessE")
 
 # Cineboard restful API
 
