@@ -1,4 +1,4 @@
--- if mysql <= 5.6
+-- db/user bootstrap
 DROP DATABASE IF EXISTS cineboard_db ;
 CREATE DATABASE cineboard_db ;
 GRANT USAGE ON *.* TO 'cineboard_user'@'localhost' ;
