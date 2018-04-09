@@ -6,16 +6,17 @@
 - [x] Github Mirror
 - [x] Design DB
 - [x] Design API
+- [x] Design Frontend
 - [x] Base Skeleton API
 - [x] Base Skeleton GUI
 - [x] Basic Tests
 - [x] Continuous Integration
-- [ ] Continuous Deployment
-- [ ] RESTful API backend
-- [ ] Client-side frontend
+- [x] Continuous Deployment
+- [x] RESTful API backend
+- [x] Client-side frontend
 - [ ] Web Design
-- [ ] Deploy Demo
+- [x] Deploy Demo
 - [ ] Advanced Tests
-- [ ] SSL LetsEncrypt
+- [x] SSL LetsEncrypt
 - [ ] Forum/Telegram group for discussions
 
