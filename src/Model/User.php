@@ -19,6 +19,9 @@ class User extends Model
 {
     protected $table = 'user';
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function libraries()
     {
         return $this->hasMany(

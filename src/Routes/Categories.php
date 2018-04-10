@@ -9,6 +9,8 @@ global $app;
 
 $app->get('/categories', function (Request $request, Response $response, array $args) {
     unset($request);
+    unset($args);
+
     $categories = Category::all();
     if (!$categories) {
         $data = "categories not found";
@@ -19,6 +21,7 @@ $app->get('/categories', function (Request $request, Response $response, array $
 
 $app->get('/categories/{id:[0-9]+}', function (Request $request, Response $response, array $args) {
     unset($request);
+
     $category = Category::find($args["id"]);
     if (!$category) {
         $data = "category not found";
@@ -28,6 +31,8 @@ $app->get('/categories/{id:[0-9]+}', function (Request $request, Response $respo
 });
 
 $app->post('/categories', function (Request $request, Response $response, array $args) use ($app) {
+    unset($args);
+
     $parsedBody = $request->getParsedBody();
 
     // match number of db field

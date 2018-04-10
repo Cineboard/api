@@ -9,6 +9,8 @@ global $app;
 
 $app->get('/libraries', function (Request $request, Response $response, array $args) {
     unset($request);
+    unset($args);
+
     $libraries = Library::with('categories')->get();
     if (!$libraries) {
         $data = "libraries not found";
@@ -28,6 +30,7 @@ $app->get('/libraries/{id:[0-9]+}', function (Request $request, Response $respon
 });
 
 $app->post('/libraries', function (Request $request, Response $response, array $args) {
+    unset($args);
     $parsedBody = $request->getParsedBody();
 
     // match number of db field
