@@ -18,5 +18,6 @@
 - [x] Deploy Demo
 - [ ] Advanced Tests
 - [x] SSL LetsEncrypt
+- [ ] Gitlab Pages [with reports from artifacts]
 - [ ] Forum/Telegram group for discussions
 

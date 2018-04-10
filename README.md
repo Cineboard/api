@@ -18,7 +18,7 @@ Feedback are welcome!
 ### Application Components
 
 - RESTful API [slim php framework](https://github.com/slimphp/Slim)
-- Eloquent ORM [illumnate database](https://github.com/illuminate/database)
+- Eloquent ORM [illuminate database](https://github.com/illuminate/database)
 - WebGUI [AngularJS](https://github.com/angular/angular.js)
 - RDBMS [MariaDB 10.1](https://github.com/MariaDB/server)
 
@@ -26,7 +26,7 @@ Feedback are welcome!
 ### TO THE USERS
 
 First: we need to clone both front/api repositories.
-Then create database, a little help from the api repos (we suppose you have a mysql5.7+ db running).
+Then create database, a little help from the api repos (mysql/mariadb already running).
 Edit db.config and db_create.sh to customize configuration and then launch db_create.sh
 
 ```console
@@ -41,7 +41,7 @@ To quickly use the application launch this command on both repositories:
 $ bash server-start-builtin.sh $PORT
 ```
 
-and browser to localhost:8080 to load webgui.
+and browser to localhost:$PORT to load webgui.
 
 
 ### TO THE DEVELOPERS and CONTRIBUTORS!
