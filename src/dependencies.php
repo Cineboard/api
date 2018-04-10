@@ -49,29 +49,26 @@ $container['cache'] = function (Container $container) {
 // Error Handler - needed by frontend
 $container['errorHandler'] = function (Container $container) {
     return function ($request, $response, $exception) use ($container) {
+        unset($request);
 
         $settings = $container->settings;
 
         $errorCode = 500;
         if (is_numeric($exception->getCode())
-        && $exception->getCode() > 300
-        && $exception->getCode() < 600) {
+            && $exception->getCode() > 300
+            && $exception->getCode() < 600) {
             $errorCode = $exception->getCode();
         }
 
-        if ($settings['debug'] == true) {
-            $data = [
-            'error_code' => $errorCode,
-            'error_message' => $exception->getMessage(),
-            'file' => $exception->getFile(),
-            'line' => $exception->getLine(),
-            'trace' => explode("\n", $exception->getTraceAsString()),
-            ];
-        } else {
-            $data = [
+        $data = [
             'error_code' => $errorCode,
             'error_message' => $exception->getMessage()
-            ];
+        ];
+
+        if ($settings['debug'] == true) {
+            $data['file'] = $exception->getFile();
+            $data['line'] = $exception->getLine();
+            $data['trace'] = explode("\n", $exception->getTraceAsString());
         }
 
         $container->logger->error($errorCode

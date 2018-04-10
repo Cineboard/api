@@ -9,6 +9,8 @@ global $app;
 
 $app->get('/users', function (Request $request, Response $response, array $args) {
     unset($request);
+    unset($args);
+
     $users = User::all();
     if (!$users) {
         $data = "users not found";
@@ -20,6 +22,7 @@ $app->get('/users', function (Request $request, Response $response, array $args)
 // return single record
 $app->get('/users/{id:[0-9]+}', function (Request $request, Response $response, array $args) {
     unset($request);
+
     $user = User::find($args["id"]);
     if (!$user) {
         $data = "user not found";
@@ -29,6 +32,8 @@ $app->get('/users/{id:[0-9]+}', function (Request $request, Response $response, 
 });
 
 $app->post('/users', function (Request $request, Response $response, array $args) use ($app) {
+    unset($args);
+
     $parsedBody = $request->getParsedBody();
 
     // match number of db field

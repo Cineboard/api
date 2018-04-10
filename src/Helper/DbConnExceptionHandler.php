@@ -9,6 +9,7 @@ use Slim\Http\Request;
  * DbConnExceptionHandler
  *
  * Handling errors connection with database
+ *
  */
 class DbConnExceptionHandler implements ExceptionHandler
 {
@@ -34,7 +35,8 @@ class DbConnExceptionHandler implements ExceptionHandler
      */
     public function render($request, \Exception $err)
     {
-        throw $err . $request;
+        unset($request);
+        throw $err;
     }
 
     /**
@@ -47,6 +49,7 @@ class DbConnExceptionHandler implements ExceptionHandler
      */
     public function renderForConsole($output, \Exception $err)
     {
-        throw $err . $output;
+        unset($output);
+        throw $err;
     }
 }
