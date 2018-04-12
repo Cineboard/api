@@ -21,7 +21,6 @@ $app->get('/categories', function (Request $request, Response $response, array $
 
 $app->get('/categories/{id:[0-9]+}', function (Request $request, Response $response, array $args) {
     unset($request);
-
     $category = Category::find($args["id"]);
     if (!$category) {
         $data = "category not found";
@@ -34,12 +33,6 @@ $app->post('/categories', function (Request $request, Response $response, array 
     unset($args);
 
     $parsedBody = $request->getParsedBody();
-
-    // match number of db field
-    if (count($parsedBody) > 1) {
-        $data = "too much argumets";
-        return $response->withJson($data, 401);
-    }
 
     $name = $parsedBody['name'];
     if (!isset($name)) {
@@ -70,36 +63,48 @@ $app->post('/categories', function (Request $request, Response $response, array 
 });
 
 $app->put('/categories/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($app) {
+    /**
+     * Parse request body
+     */
     $parsedBody = $request->getParsedBody();
 
-    // match number of db field
-    if (count($parsedBody) > 1) {
-        $data = "too much argumets";
-        return $response->withJson($data, 401);
-    }
+    $app->getContainer()->get('logger')->debug("PUT categories, body: " . var_export($parsedBody, true));
 
-    $name = $parsedBody['name'];
-
-    if (!isset($name)) {
-        $data = "name cannot be null";
-        return $response->withJson($data, 401);
-    }
-
-    // category name db varchar 255 - if not 404 to avoid useless db interrogation
-    if (mb_strlen($name, 'UTF-8') > 255) {
-        $data = "name too long: max 255 chars";
-        return $response->withJson($data, 401);
-    }
-
-    // name is unique - check it
+    /**
+     * Check existence for element to update
+     */
     $category = Category::find($args['id']);
     // check instanceof instead of obj
-    if ($category instanceof Category && $category->name == $name) {
-        $data = "category name already exists";
-        return $response->withJson($data, 401);
+    if (!$category instanceof Category) {
+        $data = "category to update not found";
+        return $response->withJson($data, 404);
     }
 
-    $category->name = $name;
+    /**
+     * Start body fields check
+     */
+
+    // category name db varchar 255 - if not 404 to avoid useless db interrogation
+    if (isset($parsedBody['name'])) {
+        if (mb_strlen($parsedBody['name'], 'UTF-8') > 255) {
+            $data = "name too long: max 255 chars";
+            return $response->withJson($data, 401);
+        }
+
+        $category->name = $parsedBody['name'];
+    }
+
+    if (array_key_exists('deleted_at', $parsedBody)) {
+        if (is_integer($parsedBody['deleted_at'])) {
+            /**
+             * If submitted date is a timestamp, convert it to db date format
+             */
+            $parsedBody['deleted_at'] = date('Y-m-d H:i:s');
+        }
+
+        $category->deleted_at = $parsedBody['deleted_at'];
+    }
+
     $category->save();
     $app->getContainer()->get('logger')->info("CATEGORY EDITED " . var_export($category['name'], true));
 
