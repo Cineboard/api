@@ -31,28 +31,35 @@ $app->get('/categories/{id:[0-9]+}', function (Request $request, Response $respo
 
 $app->post('/categories', function (Request $request, Response $response, array $args) use ($app) {
     unset($args);
-
+    /**
+     * Parse request body
+     */
     $parsedBody = $request->getParsedBody();
 
-    $name = $parsedBody['name'];
-    if (!isset($name)) {
+    /**
+     * Start body fields check
+     */
+
+    if (!isset($parsedBody['name'])) {
         $data = "name cannot be null";
-        return $response->withJson($data, 401);
+        return $response->withJson($data, 400);
+    } else {
+        if (mb_strlen($parsedBody['name'], 'UTF-8') > 255) {
+            $data = "name too long: max 255 chars";
+            return $response->withJson($data, 400);
+        }
     }
 
-    // name db varchar 255 - if not 404 to avoid useless db interrogation
-    if (mb_strlen($name, 'UTF-8') > 255) {
-        $data = "name too long: max 255 chars";
-        return $response->withJson($data, 401);
-    }
-
-    // name is unique - check it
-    $category = Category::where('name', $name)->first();
+    /**
+     * Check existence for element to create: name is UNIQUE
+     */
+    $category = Category::where('name', $parsedBody['name'])->first();
     // check instanceof instead of obj
-    if ($category instanceof Category && $category->name == $name) {
+    if ($category instanceof Category && $category->name == $parsedBody['name']) {
         $data = "name already exists";
-        return $response->withJson($data, 401);
+        return $response->withJson($data, 400);
     }
+    $name = $parsedBody['name'];
     // create if not exists
     $category = new Category();
     $category->name = $name;

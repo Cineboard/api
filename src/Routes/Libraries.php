@@ -31,71 +31,71 @@ $app->get('/libraries/{id:[0-9]+}', function (Request $request, Response $respon
 
 $app->post('/libraries', function (Request $request, Response $response, array $args) {
     unset($args);
+    /**
+     * Parse request body
+     */
     $parsedBody = $request->getParsedBody();
 
-    // match number of db field
-    if (count($parsedBody) > 8) {
-        $data = "too many argumets";
-        return $response->withJson($data, 401);
-    }
+    /**
+     * Start body fields check
+     */
 
-    $userId = $parsedBody['user_id'];
-    $title = $parsedBody['title'];
-    $director = $parsedBody['director'];
-    $rating = $parsedBody['rating'];
-    $viewed = $parsedBody['viewed'];
-    $url = $parsedBody['url'];
-    $tags = $parsedBody['tags'];
-    $notes = $parsedBody['notes'];
-
-    // check db fields limits and null/not null
-
-    if (!isset($userId)) {
+    if (!isset($parsedBody['user_id'])) {
         $data = "user_id cannot be null";
-        return $response->withJson($data, 401);
+        return $response->withJson($data, 400);
+    } else {
+        $userId = $parsedBody['user_id'];
     }
 
-    if (!isset($title)) {
+    if (!isset($parsedBody['title'])) {
         $data = "title cannot be null";
-        return $response->withJson($data, 401);
+        return $response->withJson($data, 400);
+    } else {
+        if (mb_strlen($parsedBody['title'], 'UTF-8') > 200) {
+            $data = "title too long: max 200 chars";
+            return $response->withJson($data, 400);
+        }
+        $title = $parsedBody['title'];
     }
 
-    // library title db varchar 200
-    if (mb_strlen($title, 'UTF-8') > 200) {
-        $data = "title too long: max 200 chars";
-        return $response->withJson($data, 401);
-    }
-
-    // library director db varchar 50
-    if (isset($director)) {
-        if (mb_strlen($director, 'UTF-8') > 50) {
+    if (isset($parsedBody['director'])) {
+        if (mb_strlen($parsedBody['director'], 'UTF-8') > 50) {
             $data = "director too long: max 50 chars";
-            return $response->withJson($data, 401);
+            return $response->withJson($data, 400);
         }
+        $director = $parsedBody['director'];
     }
 
-    // library url db varchar 300
-    if (isset($url)) {
-        if (mb_strlen($url, 'UTF-8') > 300) {
+    if (isset($parsedBody['url'])) {
+        if (mb_strlen($parsedBody['url'], 'UTF-8') > 300) {
             $data = "url too long: max 300 chars";
-            return $response->withJson($data, 401);
+            return $response->withJson($data, 400);
         }
+        $url = $parsedBody['url'];
     }
 
-    // library tags db text - application limit
-    if (isset($tags)) {
-        if (mb_strlen($tags, 'UTF-8') > 500) {
+    if (isset($parsedBody['tags'])) {
+        if (mb_strlen($parsedBody['tags'], 'UTF-8') > 500) {
             $data = "tags too long: max 500 chars";
-            return $response->withJson($data, 401);
+            return $response->withJson($data, 400);
         }
+        $tags = $parsedBody['tags'];
     }
 
-    // library notes db text - application limit
-    if (isset($notes)) {
-        if (mb_strlen($notes, 'UTF-8') > 500) {
+    if (isset($parsedBody['notes'])) {
+        if (mb_strlen($parsedBody['notes'], 'UTF-8') > 500) {
             $data = "notes too long: max 500 chars";
-            return $response->withJson($data, 401);
+            return $response->withJson($data, 400);
         }
+        $notes = $parsedBody['notes'];
+    }
+
+    // TODO: sanity check
+    if (isset($parsedBody['rating'])) {
+        $rating = $parsedBody['rating'];
+    }
+    if (isset($parsedBody['viewed'])) {
+        $viewed = $parsedBody['viewed'];
     }
 
     // create if not exists
@@ -116,87 +116,98 @@ $app->post('/libraries', function (Request $request, Response $response, array $
 
 // save/update for existing record
 $app->put('/libraries/{id:[0-9]+}', function (Request $request, Response $response, array $args) {
+    /**
+     * Parse request body
+     */
     $parsedBody = $request->getParsedBody();
 
-    // match number of db field
-    if (count($parsedBody) > 8) {
-        $data = "too much argumets";
-        return $response->withJson($data, 401);
+    /**
+     * Check existence for element to update
+     */
+
+    $library = Library::find($args['id']);
+    // check instanceof instead of obj
+    if (!$library instanceof Library) {
+        $data = "library to update not found";
+        return $response->withJson($data, 404);
     }
 
-    $userId = $parsedBody['user_id'];
-    $title = $parsedBody['title'];
-    $director = $parsedBody['director'];
-    $rating = $parsedBody['rating'];
-    $viewed = $parsedBody['viewed'];
-    $url = $parsedBody['url'];
-    $tags = $parsedBody['tags'];
-    $notes = $parsedBody['notes'];
+    /**
+     * Start body fields check
+     * NOTE: move check on model ???
+     */
 
     // check db fields limits and null/not null
 
-    if (!isset($userId)) {
+    if (!isset($parsedBody['user_id'])) {
         $data = "user_id cannot be null";
-        return $response->withJson($data, 401);
+        return $response->withJson($data, 400);
+    } else {
+        $library->user_id = $parsedBody['user_id'];
     }
 
-    if (!isset($title)) {
+    if (!isset($parsedBody['title'])) {
         $data = "title cannot be null";
-        return $response->withJson($data, 401);
+        return $response->withJson($data, 400);
+    } else {
+        if (mb_strlen($parsedBody['title'], 'UTF-8') > 200) {
+            $data = "title too long: max 200 chars";
+            return $response->withJson($data, 400);
+        }
+        $library->title = $parsedBody['title'];
     }
 
-    // library title db varchar 200
-    if (mb_strlen($title, 'UTF-8') > 200) {
-        $data = "title too long: max 200 chars";
-        return $response->withJson($data, 401);
-    }
-
-    // library director db varchar 50
-    if (isset($director)) {
+    if (isset($parsedBody['director'])) {
         if (mb_strlen($director, 'UTF-8') > 50) {
             $data = "director too long: max 50 chars";
-            return $response->withJson($data, 401);
+            return $response->withJson($data, 400);
         }
+        $library->director = $parsedBody['director'];
     }
 
-    // library url db varchar 300
-    if (isset($url)) {
+    if (isset($parsedBody['url'])) {
         if (mb_strlen($url, 'UTF-8') > 300) {
             $data = "url too long: max 300 chars";
-            return $response->withJson($data, 401);
+            return $response->withJson($data, 400);
         }
+        $library->url = $parsedBody['url'];
     }
 
-    // library tags db text
-    if (isset($tags)) {
+    if (isset($parsedBody['tags'])) {
         if (mb_strlen($tags, 'UTF-8') > 500) {
             $data = "tags too long: max 500 chars";
-            return $response->withJson($data, 401);
+            return $response->withJson($data, 400);
         }
+        $library->tags = $parsedBody['tags'];
     }
 
-    // library notes db text
-    if (isset($notes)) {
+    if (isset($parsedBody['notes'])) {
         if (mb_strlen($notes, 'UTF-8') > 500) {
             $data = "notes too long: max 500 chars";
-            return $response->withJson($data, 401);
+            return $response->withJson($data, 400);
+        }
+        $library->notes = $parsedBody['notes'];
+    }
+
+    // TODO: sanity check
+    if (isset($parsedBody['rating'])) {
+        $library->rating = $parsedBody['rating'];
+    }
+    if (isset($parsedBody['viewed'])) {
+        $library->viewed = $parsedBody['viewed'];
+    }
+
+    if (array_key_exists('deleted_at', $parsedBody)) {
+        if (is_integer($parsedBody['deleted_at'])) {
+            /**
+             * If submitted date is a timestamp, convert it to db date format
+             */
+            $parsedBody['deleted_at'] = date('Y-m-d H:i:s');
         }
     }
 
-    $library = Library::find($args["id"]);
-    if (!$library instanceof Library) {
-        $data = "library not found";
-        return $response->withJson($data, 401);
-    }
-    $library->user_id = $userId;
-    $library->title = $title;
-    $library->director = $director;
-    $library->rating = $rating;
-    $library->viewed = $viewed;
-    $library->url = $url;
-    $library->tags = $tags;
-    $library->notes = $notes;
     $library->save();
+    $app->getContainer()->get('logger')->info("LIBRARY EDITED " . var_export($library['title'], true));
 
     return $response->withJson($library, 200);
 });
