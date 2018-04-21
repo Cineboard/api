@@ -1,19 +1,6 @@
-# Select image from https://hub.docker.com/r/_/php/
-image: php:7.1.15
-
 stages:
   - test
   - deploy
-
-services:
-  - mariadb:10.2
-
-variables:
-  # Configure mysql service https://hub.docker.com/_/mysql/
-  MYSQL_ROOT_PASSWORD: toor
-  MYSQL_DATABASE: testdb
-  MYSQL_USER: testuser
-  MYSQL_PASSWORD: testpass
 
 cache:
   key: one-key-to-roll-them-all-on-the-wall
@@ -23,7 +10,17 @@ cache:
 # We test PHP7.1
 test:php7.1:
   stage: test
-  image: php:7.1.15
+  image: php:7.1.16
+  services:
+  - mariadb:10.2
+
+  variables:
+    # Configure mysql service https://hub.docker.com/_/mysql/
+    MYSQL_ROOT_PASSWORD: toor
+    MYSQL_DATABASE: testdb
+    MYSQL_USER: testuser
+    MYSQL_PASSWORD: testpass
+
   # Install dependencies
   before_script:
     # Install git, the php image doesn't have installed
@@ -36,22 +33,21 @@ test:php7.1:
     # - php -i
     # Install php extensions
     - docker-php-ext-install pdo_mysql mbstring intl zip
-    - apt-get autoremove -yqq && apt-get clean all
     # Install composer
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install
     # Set mysql connection parameters
-    - cp src/settings.php src/settings.local.php
-    - sed -i "s/__APP_URL__/localhost:8081/g;s/__DB_HOST__/mariadb/g;s/__DB_NAME__/testdb/g;s/__DB_USER__/testuser/g;s/__DB_PASS__/testpass/g;s/__CORS_DOMAIN__/localhost:8080/g;s/__CACHE_TIME__/86400/g" src/settings.local.php
+    - cp app/src/settings.php app/src/settings.local.php
+    - sed -i "s/__APP_URL__/localhost:8081/g;s/__DB_HOST__/mariadb/g;s/__DB_NAME__/testdb/g;s/__DB_USER__/testuser/g;s/__DB_PASS__/testpass/g;s/__CORS_DOMAIN__/localhost:8080/g;s/__CACHE_TIME__/86400/g" app/src/settings.local.php
     # load db data
     - mysql -u testuser -ptestpass -h mariadb testdb < sql/struct.sql
     - mysql -u testuser -ptestpass -h mariadb testdb < sql/sample_data.sql
     # run php builtin -> TODO: nginx+php-fpm
     - bash server-start-builtin.sh 8081 >/dev/null 2>&1 &
   script:
-    - php vendor/bin/phpmd src text phpmd.xml
-    - php vendor/bin/phpmetrics --report-html=build/phpmetric-report src
-    - php vendor/phpunit/phpunit/phpunit --configuration phpunit_ci.xml
+    - php vendor/bin/phpmd app/src text phpmd.xml
+    - php vendor/bin/phpmetrics --report-html=build/phpmetric-report app/src
+    - php vendor/bin/phpunit --configuration phpunit_ci.xml
   artifacts:
     paths:
     - build/
@@ -59,23 +55,24 @@ test:php7.1:
     - master
     - devel
 
-# pages:
-#   image: alpine:latest
-#   stage: deploy
-#   dependencies:
-#     - test:php7.1
-#   script:
-#     - echo "gitlab pages on plain-html"
-#   artifacts:
-#     paths:
-#       - build
-#     expire_in: 30 days
-#   only:
-#     - master
-#     - devel
+pages:
+  image: alpine:latest
+  stage: deploy
+  dependencies:
+    - test:php7.1
+  script:
+    - echo "gitlab pages on plain-html"
+    - cp -rv build/* public/
+  artifacts:
+    paths:
+      - build
+    expire_in: 30 days
+  only:
+    - master
 
 deploy_demo:
   stage: deploy
+  image: debian:9.4-slim
   script:
     # Update package sources
     - apt-get -qq update -y
@@ -84,11 +81,8 @@ deploy_demo:
     - eval $(ssh-agent -s)
     # add ssh key from ci secrets envars
     - ssh-add - <<<"$SSH_KEY_DEMO"
-    # disable host key checking (NOTE: makes you susceptible to man-in-the-middle attacks)
-    # WARNING: use only in docker container, if you use it with shell you will overwrite your user's ssh config
-    - mkdir -p ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - ssh $SSH_USER_DEMO@cineboard.firegarden.co bash deploy-api.sh
+    # execute script on deploy server
+    - ssh -o StrictHostKeyChecking=no $SSH_USER_DEMO@cineboard.firegarden.co bash deploy-api.sh
     - echo yay
   environment:
     name: demo

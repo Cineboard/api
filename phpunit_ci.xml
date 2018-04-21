@@ -23,8 +23,8 @@
             <directory suffix=".php">vendor</directory>
         </blacklist>
         <whitelist>
-            <directory suffix=".php">src</directory>
-            <directory suffix=".php">public</directory>
+            <directory suffix=".php">app/src</directory>
+            <directory suffix=".php">app/public</directory>
         </whitelist>
     </filter>
 

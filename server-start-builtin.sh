@@ -12,5 +12,5 @@ PORT=$1
 
 echo -e "Launching php builtin server on port "$PORT" \n"
 
-php -S 0.0.0.0:$PORT -t public public/index.php
+php -S 0.0.0.0:$PORT -t app/public/
 

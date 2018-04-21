@@ -57,21 +57,21 @@ Check settings for debug => 'true'  and monolog level to Logger::DEBUG .
 #### Check with PHPCS
 
 ```console
-$ php vendor/bin/phpcs --standard=phpcs.xml src
+$ php vendor/bin/phpcs --standard=phpcs.xml app/src
 ```
 
 
 #### Check with PHPMD
 
 ```console
-$ php vendor/bin/phpmd src text phpmd.xml
+$ php vendor/bin/phpmd app/src text phpmd.xml
 ```
 
 
 #### Check with PHPMetrics
 
 ```console
-$ php vendor/bin/phpmetrics --report-html=build/phpmetric-report src
+$ php vendor/bin/phpmetrics --report-html=build/phpmetric-report app/src
 ```
 
 #### Check with PHPstan [optional]
@@ -79,7 +79,7 @@ $ php vendor/bin/phpmetrics --report-html=build/phpmetric-report src
 Warning! Due to incompatibilities with EloquenORM some false positive will be shown.
 
 ```console
-$ php vendor/bin/phpstan analyse {-l $level} src
+$ php vendor/bin/phpstan analyse {-l $level} app/src
 ```
 
 #### Run php unittests

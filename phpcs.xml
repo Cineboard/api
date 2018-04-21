@@ -2,8 +2,8 @@
 <ruleset name="PHP_CodeSniffer">
     <description>The coding standard for PHP_CodeSniffer itself.</description>
 
-    <!--<include-pattern>../src/*</include-pattern>-->
-    <exclude-pattern>../tests/*</exclude-pattern>
+    <!--<include-pattern>app/src/*</include-pattern>-->
+    <exclude-pattern>tests/*</exclude-pattern>
 
     <!-- Display progress -->
     <arg value="p"/>
