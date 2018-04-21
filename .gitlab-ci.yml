@@ -57,7 +57,6 @@ test:php7.1:
 
 pages:
   image: alpine:latest
-  stage: deploy
   dependencies:
     - test:php7.1
   script:
