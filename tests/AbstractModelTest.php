@@ -17,7 +17,7 @@ abstract class AbstractModelTest extends TestCase
      */
     public static function prepareEloquentConnection()
     {
-        $configFile = __DIR__ . '/../src/settings.local.php';
+        $configFile = __DIR__ . '/../app/src/settings.local.php';
         self::assertFileExists($configFile);
 
         $settings = include $configFile;

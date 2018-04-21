@@ -14,7 +14,7 @@
     }],
     "autoload": {
         "psr-4": {
-            "Cineboard\\": "src/"
+            "Cineboard\\": "app/src/"
         }
     },
     "autoload-dev": {
@@ -31,10 +31,10 @@
     },
     "scripts": {
         "tests":[
-            "php vendor/bin/phpcs --standard=phpcs.xml src",
-            "php vendor/bin/phpmd src text phpmd.xml",
-            "php vendor/bin/phpmetrics --report-html=build/phpmetric-report src",
-            "php vendor/phpunit/phpunit/phpunit --coverage-html build/"
+            "php vendor/bin/phpcs --standard=phpcs.xml app/src",
+            "php vendor/bin/phpmd app/src text phpmd.xml",
+            "php vendor/bin/phpmetrics --report-html=build/phpmetric-report app/src",
+            "php vendor/bin/phpunit --coverage-html build/"
         ],
         "post-update-cmd": [
             "echo 'UPDATE COMPLETE'",
