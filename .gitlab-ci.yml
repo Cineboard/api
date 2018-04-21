@@ -55,19 +55,20 @@ test:php7.1:
     - master
     - devel
 
-pages:
-  image: alpine:latest
-  dependencies:
-    - test:php7.1
-  script:
-    - echo "gitlab pages on plain-html"
-    - cp -rv build/* public/
-  artifacts:
-    paths:
-      - build
-    expire_in: 30 days
-  only:
-    - master
+# pages:
+#   image: alpine:latest
+#   stages: deploy
+#   dependencies:
+#     - test:php7.1
+#   script:
+#     - echo "gitlab pages on plain-html"
+#     - cp -rv build/* public/
+#   artifacts:
+#     paths:
+#       - build
+#     expire_in: 30 days
+#   only:
+#     - master
 
 deploy_demo:
   stage: deploy
