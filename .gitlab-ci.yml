@@ -28,15 +28,14 @@ cache:
     - apt-get update -yqq >/dev/null
     - apt-get install -yqq git libicu-dev libcurl4-openssl-dev libmcrypt-dev zlib1g-dev zip unzip mysql-client libmysqlclient-dev >/dev/null
     - pecl install xdebug-2.5.0
-    - docker-php-ext-enable xdebug
-    # Install php extensions
+    - docker-php-ext-enable xdebug >/dev/null
     - docker-php-ext-install pdo_mysql mbstring intl zip >/dev/null
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install
     # Set mysql connection parameters
     - cp app/src/settings.php app/src/settings.local.php
-    - sed -i "s/__APP_URL__/localhost:8081/g;s/__DB_HOST__/mariadb/g;s/__DB_NAME__/testdb/g;s/__DB_USER__/testuser/g;s/__DB_PASS__/testpass/g;s/__CORS_DOMAIN__/localhost:8080/g;s/__CACHE_TIME__/86400/g" app/src/settings.local.php
-    - sed -i "s/__APP_URL__/localhost:8081/g;s/__DB_HOST__/mariadb/g;s/__DB_NAME__/testdb/g;s/__DB_USER__/testuser/g;s/__DB_PASS__/testpass/g;s/__CORS_DOMAIN__/localhost:8080/g;s/__CACHE_TIME__/86400/g" app/src/settings.local.php
+    - sed -i "s/__APP_URL__/localhost:8081/g;s/__DB_HOST__/mariadb/g;s/__DB_NAME__/'"$MYSQL_DATABASE"'/g;s/__DB_USER__/'"$MYSQL_USER"'/g;s/__DB_PASS__/'"$MYSQL_PASSWORD"'/g;s/__CORS_DOMAIN__/localhost:8080/g;s/__CACHE_TIME__/86400/g" app/src/settings.local.php
+    #- sed -i "s/__APP_URL__/localhost:8081/g;s/__DB_HOST__/mariadb/g;s/__DB_NAME__/testdb/g;s/__DB_USER__/testuser/g;s/__DB_PASS__/testpass/g;s/__CORS_DOMAIN__/localhost:8080/g;s/__CACHE_TIME__/86400/g" app/src/settings.local.php
     - cat app/src/settings.local.php
     # load db data
     - mysql -u $MYSQL_USER --password="$MYSQL_PASSWORD" -h mariadb $MYSQL_DATABASE < sql/struct.sql
