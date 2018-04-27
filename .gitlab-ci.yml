@@ -7,43 +7,48 @@ cache:
   paths:
   - vendor/
 
-# We test PHP7.1
-test:php7.1:
+# Template for test jobs
+.job_template: &job_definition
   stage: test
-  image: php:7.1.16
   services:
-  - mariadb:10.2
+    # Bring in any services we need http://docs.gitlab.com/ee/ci/docker/using_docker_images.html#what-is-a-service
+    # See http://docs.gitlab.com/ce/ci/services/README.html for examples.
+    - mariadb:10.2
 
   variables:
-    # Configure mysql service https://hub.docker.com/_/mysql/
+    # Configure mariadb service https://hub.docker.com/_/mariadb/
     MYSQL_ROOT_PASSWORD: toor
     MYSQL_DATABASE: testdb
     MYSQL_USER: testuser
     MYSQL_PASSWORD: testpass
 
-  # Install dependencies
   before_script:
     # Install git, the php image doesn't have installed
     - export DEBIAN_FRONTEND=noninteractive
-    - apt-get update -yqq
-    - apt-get install -yqq git libicu-dev libcurl4-openssl-dev libmcrypt-dev zlib1g-dev zip unzip mysql-client libmysqlclient-dev
+    - apt-get update -yqq >/dev/null
+    - apt-get install -yqq git libicu-dev libcurl4-openssl-dev libmcrypt-dev zlib1g-dev zip unzip mysql-client libmysqlclient-dev >/dev/null
     - pecl install xdebug-2.5.0
     - docker-php-ext-enable xdebug
-    # Check php excentsions
-    # - php -i
     # Install php extensions
-    - docker-php-ext-install pdo_mysql mbstring intl zip
-    # Install composer
+    - docker-php-ext-install pdo_mysql mbstring intl zip >/dev/null
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install
     # Set mysql connection parameters
     - cp app/src/settings.php app/src/settings.local.php
     - sed -i "s/__APP_URL__/localhost:8081/g;s/__DB_HOST__/mariadb/g;s/__DB_NAME__/testdb/g;s/__DB_USER__/testuser/g;s/__DB_PASS__/testpass/g;s/__CORS_DOMAIN__/localhost:8080/g;s/__CACHE_TIME__/86400/g" app/src/settings.local.php
+    - sed -i "s/__APP_URL__/localhost:8081/g;s/__DB_HOST__/mariadb/g;s/__DB_NAME__/testdb/g;s/__DB_USER__/testuser/g;s/__DB_PASS__/testpass/g;s/__CORS_DOMAIN__/localhost:8080/g;s/__CACHE_TIME__/86400/g" app/src/settings.local.php
+    - cat app/src/settings.local.php
     # load db data
-    - mysql -u testuser -ptestpass -h mariadb testdb < sql/struct.sql
-    - mysql -u testuser -ptestpass -h mariadb testdb < sql/sample_data.sql
+    - mysql -u $MYSQL_USER --password="$MYSQL_PASSWORD" -h mariadb $MYSQL_DATABASE < sql/struct.sql
+    - mysql -u $MYSQL_USER --password="$MYSQL_PASSWORD" -h mariadb $MYSQL_DATABASE < sql/sample_data.sql
     # run php builtin -> TODO: nginx+php-fpm
     - bash server-start-builtin.sh 8081 >/dev/null 2>&1 &
+
+test:php7.1:
+  <<: *job_definition
+  stage: test
+  image: php:7.1.16
+
   script:
     - php vendor/bin/phpmd app/src text phpmd.xml
     - php vendor/bin/phpmetrics --report-html=build/phpmetric-report app/src
@@ -55,34 +60,31 @@ test:php7.1:
     - master
     - devel
 
-# pages:
-#   image: alpine:latest
-#   stages: deploy
-#   dependencies:
-#     - test:php7.1
+# # If Xdebug was installed you can generate a coverage report and see code coverage metrics.
+# test:php7.2:
+#   <<: *job_definition
+#   stage: test
+#   # Select image from https://hub.docker.com/_/php/
+#   image: php:7.2.4
+
 #   script:
-#     - echo "gitlab pages on plain-html"
-#     - cp -rv build/* public/
+#     - php vendor/bin/phpmd app/src text phpmd.xml
+#     - php vendor/bin/phpmetrics --report-html=build/phpmetric-report app/src
+#     - php vendor/bin/phpunit --configuration phpunit_ci.xml --coverage-text --colors=never
 #   artifacts:
 #     paths:
-#       - build
-#     expire_in: 30 days
-#   only:
-#     - master
+#     - build/
+#   allow_failure: true
 
 deploy_demo:
   stage: deploy
   image: debian:9.4-slim
   script:
-    # Update package sources
     - apt-get -qq update -y
-    - apt-get -qq install -y openssh-client
-    # run ssh-agent
+    - apt-get -qq install -y openssh-client git
     - eval $(ssh-agent -s)
-    # add ssh key from ci secrets envars
-    - ssh-add - <<<"$SSH_KEY_DEMO"
-    # execute script on deploy server
-    - ssh -o StrictHostKeyChecking=no $SSH_USER_DEMO@cineboard.firegarden.co bash deploy-api.sh
+    - ssh-add - <<<"$SSH_KEY_DEMO" > /dev/null
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT_DEMO $SSH_USER_DEMO@cineboard.firegarden.co bash deploy-api.sh &>/dev/null
     - echo yay
   environment:
     name: demo
